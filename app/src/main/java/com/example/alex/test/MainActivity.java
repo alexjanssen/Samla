@@ -1,15 +1,16 @@
 package com.example.alex.test;
 
+import android.content.res.Resources;
+import android.hardware.Sensor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,88 +19,118 @@ import java.util.List;
 import android.os.Handler;
 
 public class MainActivity extends AppCompatActivity {
-    ArrayList<TextView> tvL1 = new ArrayList();
+    ArrayList<CheckBox> cbL1 = new ArrayList();
     ArrayList<TextView> tvL2 = new ArrayList();
-    TextView tv1,tv2,tv3,tv4,tv5,tv6,tv7,tv8,tv9,tv10;
-    TextView tv11,tv12,tv13,tv14,tv15,tv16,tv17,tv18,tv19,tv20;
-    Button btn1;
-    Button btn2;
+
+    TextView tvLichtWert;
+    TextView tvAccWert;
+    TextView tvRotationWert;
+    TextView tvGravityWert;
+    TextView tvProximityWert;
+    TextView tvMagnetfeldWert;
+    Button bttnPush;
+    Button bttnStart;
+    CheckBox cbLicht;
+    CheckBox cbAcc;
+    CheckBox cbRotation;
+    CheckBox cbGravity;
+    CheckBox cbProximity;
+    CheckBox cbMagnetfeld;
+    EditText etFLicht;
+    EditText etFAcc;
+    EditText etFRotation;
+    EditText etFGravity;
+    EditText etFProximity;
+    EditText etFMagnetfeld;
     Sensoren sens;
     boolean record = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        bttnPush = (Button) findViewById(R.id.bttnPush);
+        bttnStart = (Button) findViewById(R.id.bttnStart);
 
-        tv1 = (TextView) findViewById(R.id.tv1);
-        tv2 = (TextView) findViewById(R.id.tv2);
-        tv3 = (TextView) findViewById(R.id.tv3);
-        tv4 = (TextView) findViewById(R.id.tv4);
-        tv5 = (TextView) findViewById(R.id.tv5);
-        tv6 = (TextView) findViewById(R.id.tv6);
-        tv7 = (TextView) findViewById(R.id.tv7);
-        tv8 = (TextView) findViewById(R.id.tv8);
-        tv9 = (TextView) findViewById(R.id.tv9);
-        tv10 = (TextView) findViewById(R.id.tv10);
+        cbLicht = (CheckBox) findViewById(R.id.cbLicht);
+        cbAcc = (CheckBox) findViewById(R.id.cbAcc);
+        cbRotation = (CheckBox) findViewById(R.id.cbRotation);
+        cbGravity = (CheckBox) findViewById(R.id.cbGravity);
+        cbProximity = (CheckBox) findViewById(R.id.cbProximity);
+        cbMagnetfeld = (CheckBox) findViewById(R.id.cbMagnetfeld);
 
-        tv11 = (TextView) findViewById(R.id.tv11);
-        tv12 = (TextView) findViewById(R.id.tv12);
-        tv13 = (TextView) findViewById(R.id.tv13);
-        tv14 = (TextView) findViewById(R.id.tv14);
-        tv15 = (TextView) findViewById(R.id.tv15);
-        tv16 = (TextView) findViewById(R.id.tv16);
-        tv17 = (TextView) findViewById(R.id.tv17);
-        tv18 = (TextView) findViewById(R.id.tv18);
-        tv19 = (TextView) findViewById(R.id.tv19);
-        tv20 = (TextView) findViewById(R.id.tv20);
+        tvLichtWert = (TextView) findViewById(R.id.tvLichtWert);
+        tvAccWert = (TextView) findViewById(R.id.tvAccWert);
+        tvRotationWert = (TextView) findViewById(R.id.tvRotationWert);
+        tvGravityWert = (TextView) findViewById(R.id.tvGravityWert);
+        tvProximityWert = (TextView) findViewById(R.id.tvProximityWert);
+        tvMagnetfeldWert = (TextView) findViewById(R.id.tvMagnetfeldWert);
 
-        tvL1.add(tv1);tvL1.add(tv2);tvL1.add(tv3);tvL1.add(tv4);tvL1.add(tv5);
-        tvL1.add(tv6);tvL1.add(tv7);tvL1.add(tv8);tvL1.add(tv9);tvL1.add(tv10);
+        etFLicht = (EditText) findViewById(R.id.etFLicht);
+        etFAcc = (EditText) findViewById(R.id.etFAcc);
+        etFRotation = (EditText) findViewById(R.id.etFRotation);
+        etFGravity = (EditText) findViewById(R.id.etFGravity);
+        etFProximity = (EditText) findViewById(R.id.etFProximity);
+        etFMagnetfeld = (EditText) findViewById(R.id.etFMagnetfeld);
 
-        tvL2.add(tv11);tvL2.add(tv12);tvL2.add(tv13);tvL2.add(tv14);tvL2.add(tv15);
-        tvL2.add(tv16);tvL2.add(tv17);tvL2.add(tv18);tvL2.add(tv19);tvL2.add(tv20);
+        cbL1.add(cbLicht);
+        cbL1.add(cbAcc);
+        cbL1.add(cbRotation);
+        cbL1.add(cbGravity);
+        cbL1.add(cbProximity);
+        cbL1.add(cbMagnetfeld);
 
-
-
-
-        btn1 = (Button) findViewById(R.id.btn1);
-        btn2 = (Button) findViewById(R.id.btn2);
-
-        btn1.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             sens = new Sensoren(MainActivity.this);
-                                             List<String> sl = sens.getAllSensorNames();
-                                             for(int i =0;i<tvL1.size()&&i<sl.size();i++){
-                                                 tvL1.get(i).setText(sl.get(i));
-                                             }
+        tvL2.add(tvLichtWert);
+        tvL2.add(tvAccWert);
+        tvL2.add(tvRotationWert);
+        tvL2.add(tvGravityWert);
+        tvL2.add(tvProximityWert);
+        tvL2.add(tvMagnetfeldWert);
 
 
+        bttnPush.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            sens = new Sensoren(MainActivity.this);
+                                            List<String> sl = sens.getAllSensorNames();
+                                            for (int i = 0; i < cbL1.size() && i < sl.size(); i++) {
+                                                cbL1.get(i).setText(sens.sList.get(i).getName());
+                                            }
 
-                                         }
-                                     }
-        );
+                                            cbLicht.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            cbAcc.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            cbRotation.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            cbGravity.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            cbProximity.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            cbMagnetfeld.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            cbLicht.setChecked(true);
+                                            cbAcc.setChecked(true);
+                                            cbRotation.setChecked(true);
+                                            cbGravity.setChecked(true);
+                                            cbProximity.setChecked(true);
+                                            cbMagnetfeld.setChecked(true);
 
-        btn2.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
 
-                                        if (btn2.getText() == "start")
-                                        {
-                                            btn2.setText("stop");
-                                            btn2.invalidate();
-                                            record = true;
-                                            handler(2000);
-                                        }
-                                        else
-                                        {
-                                            btn2.setText("start");
-                                            record = false;
                                         }
                                     }
-                                }
+        );
+
+        bttnStart.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             if (bttnStart.getText() == "start") {
+                                                 bttnStart.setText("stop");
+                                                 bttnStart.invalidate();
+                                                 record = true;
+                                                 handler(50);
+                                             } else {
+                                                 bttnStart.setText("start");
+                                                 record = false;
+                                             }
+                                         }
+                                     }
         );
 
     }
@@ -122,25 +153,58 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void handler(final int i){
+    private void handler(final int i) {
         final Handler ha = new Handler();
         ha.postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 //toDo
-                //Log.d("Handler:", "running...");
+                Log.d("Handler:", "running...");
                 ha.postDelayed(this, i);
-                if(record) {
+                if (record) {
                     ArrayList<String> sl = sens.getWerte();
                     for (int i = 0; i < sl.size(); i++) {
                         tvL2.get(i).setText(sl.get(i));
                     }
-
-
                 }
-
             }
-        },i);
+        }, i);
+    }
+
+    public int samplingRate(Sensor s)
+    {
+        int eingabe = 0;
+        switch(s.getType())
+        {
+            case Sensor.TYPE_LIGHT:
+                eingabe = Integer.parseInt(etFLicht.getText().toString());
+                break;
+
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                eingabe = Integer.parseInt(etFAcc.getText().toString());
+                break;
+
+            case Sensor.TYPE_GYROSCOPE:
+                eingabe = Integer.parseInt(etFRotation.getText().toString());
+                break;
+
+            case Sensor.TYPE_GRAVITY:
+                eingabe = Integer.parseInt(etFGravity.getText().toString());
+                break;
+
+            case Sensor.TYPE_PROXIMITY:
+                eingabe = Integer.parseInt(etFProximity.getText().toString());
+                break;
+
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                eingabe = Integer.parseInt(etFMagnetfeld.getText().toString());
+                break;
+
+            default:
+                break;
+        }
+
+        return 1000000 / eingabe;
     }
 }
