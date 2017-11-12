@@ -4,6 +4,8 @@ import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -11,12 +13,17 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Handler;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<CheckBox> cbL1 = new ArrayList();
@@ -36,13 +43,11 @@ public class MainActivity extends AppCompatActivity {
     CheckBox cbGravity;
     CheckBox cbProximity;
     CheckBox cbMagnetfeld;
-    EditText etFLicht;
-    EditText etFAcc;
-    EditText etFRotation;
-    EditText etFGravity;
-    EditText etFProximity;
-    EditText etFMagnetfeld;
+    //EditText etDelay;
+    SeekBar sbSamplingrate;
+    TextView tvSamplingrate;
     Sensoren sens;
+    int samplingrate;
     boolean record = false;
 
 
@@ -68,12 +73,11 @@ public class MainActivity extends AppCompatActivity {
         tvProximityWert = (TextView) findViewById(R.id.tvProximityWert);
         tvMagnetfeldWert = (TextView) findViewById(R.id.tvMagnetfeldWert);
 
-        etFLicht = (EditText) findViewById(R.id.etFLicht);
-        etFAcc = (EditText) findViewById(R.id.etFAcc);
-        etFRotation = (EditText) findViewById(R.id.etFRotation);
-        etFGravity = (EditText) findViewById(R.id.etFGravity);
-        etFProximity = (EditText) findViewById(R.id.etFProximity);
-        etFMagnetfeld = (EditText) findViewById(R.id.etFMagnetfeld);
+        //etDelay = (EditText) findViewById(R.id.etDelay);
+        tvSamplingrate =(TextView) findViewById(R.id.tvSamplingrate);
+        sbSamplingrate = (SeekBar) findViewById(R.id.sbSamplingrate);
+        sbSamplingrate.setMax(1000);
+        sbSamplingrate.setProgress(50);
 
         cbL1.add(cbLicht);
         cbL1.add(cbAcc);
@@ -89,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
         tvL2.add(tvProximityWert);
         tvL2.add(tvMagnetfeldWert);
 
+        //samplingrate = Integer.parseInt(etDelay.getText().toString());
+        samplingrate = sbSamplingrate.getProgress();
+        tvSamplingrate.setText("Samplingrate: "+samplingrate);
 
         bttnPush.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -124,13 +131,34 @@ public class MainActivity extends AppCompatActivity {
                                                  bttnStart.setText("stop");
                                                  bttnStart.invalidate();
                                                  record = true;
-                                                 handler(50);
+                                                 handler(samplingrate);
                                              } else {
                                                  bttnStart.setText("start");
                                                  record = false;
                                              }
                                          }
                                      }
+        );
+
+        sbSamplingrate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                                      @Override
+                                                      public void onStopTrackingTouch(SeekBar seekBar) {
+                                                          // TODO Auto-generated method stub
+                                                      }
+
+                                                      @Override
+                                                      public void onStartTrackingTouch(SeekBar seekBar) {
+                                                          // TODO Auto-generated method stub
+                                                      }
+
+                                                      @Override
+                                                      public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                                          // TODO Auto-generated method stub
+                                                          samplingrate = progress;
+                                                          tvSamplingrate.setText("Samplingrate: "+samplingrate);
+                                                          handler(samplingrate);
+                                                      }
+                                                  }
         );
 
     }
@@ -170,41 +198,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }, i);
-    }
-
-    public int samplingRate(Sensor s)
-    {
-        int eingabe = 0;
-        switch(s.getType())
-        {
-            case Sensor.TYPE_LIGHT:
-                eingabe = Integer.parseInt(etFLicht.getText().toString());
-                break;
-
-            case Sensor.TYPE_LINEAR_ACCELERATION:
-                eingabe = Integer.parseInt(etFAcc.getText().toString());
-                break;
-
-            case Sensor.TYPE_GYROSCOPE:
-                eingabe = Integer.parseInt(etFRotation.getText().toString());
-                break;
-
-            case Sensor.TYPE_GRAVITY:
-                eingabe = Integer.parseInt(etFGravity.getText().toString());
-                break;
-
-            case Sensor.TYPE_PROXIMITY:
-                eingabe = Integer.parseInt(etFProximity.getText().toString());
-                break;
-
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                eingabe = Integer.parseInt(etFMagnetfeld.getText().toString());
-                break;
-
-            default:
-                break;
-        }
-
-        return 1000000 / eingabe;
     }
 }

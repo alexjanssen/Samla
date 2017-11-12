@@ -108,7 +108,6 @@ public class Sensoren implements SensorEventListener {
         mGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         mProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mMagnetfeld = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        //sList = sensorManager.getSensorList(Sensor.TYPE_ALL);
         sList = new ArrayList<>();
         sList.add(mLicht);sList.add(mAccelerometer);sList.add(mRotation);sList.add(mGravity);
         sList.add(mProximity);sList.add(mMagnetfeld);
@@ -116,7 +115,6 @@ public class Sensoren implements SensorEventListener {
     }
 
     public void sensorRegister(Sensor s) {
-        //sensorManager.registerListener(this, s, ma.samplingRate(s));
         sensorManager.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
     }
     public void sensorUnregister(Sensor s)

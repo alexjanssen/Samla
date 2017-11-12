@@ -65,6 +65,25 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvSamplingrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/tvSamplingrate"
+                    android:textAppearance="@android:style/TextAppearance.Material" />
+
+                <SeekBar
+                    android:id="@+id/sbSamplingrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <CheckBox
@@ -77,20 +96,6 @@
                     android:text="Lichtsensor"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:layout_editor_absoluteY="83dp" />
-
-                <EditText
-                    android:id="@+id/etFLicht"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:text="@string/samplingrate"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cbLicht"
-                    tools:layout_editor_absoluteY="76dp" />
 
             </LinearLayout>
 
@@ -121,20 +126,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvLichtWert" />
 
-                <EditText
-                    android:id="@+id/etFAcc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:text="@string/samplingrate"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cbAcc"
-                    tools:layout_editor_absoluteY="160dp" />
-
             </LinearLayout>
 
             <TextView
@@ -163,20 +154,6 @@
                     android:text="Rotationssensor"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvAccWert" />
-
-                <EditText
-                    android:id="@+id/etFRotation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:text="@string/samplingrate"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cbRotation"
-                    tools:layout_editor_absoluteY="245dp" />
 
             </LinearLayout>
 
@@ -207,20 +184,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvRotationWert" />
 
-                <EditText
-                    android:id="@+id/etFGravity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:text="@string/samplingrate"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cbGravity"
-                    tools:layout_editor_absoluteY="330dp" />
-
             </LinearLayout>
 
             <TextView
@@ -250,20 +213,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvGravityWert" />
 
-                <EditText
-                    android:id="@+id/etFProximity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:text="@string/samplingrate"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cbProximity"
-                    tools:layout_editor_absoluteY="415dp" />
-
             </LinearLayout>
 
             <TextView
@@ -292,20 +241,6 @@
                     android:text="Magnetfeld"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvProximityWert" />
-
-                <EditText
-                    android:id="@+id/etFMagnetfeld"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:text="@string/samplingrate"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/cbMagnetfeld"
-                    tools:layout_editor_absoluteY="500dp" />
 
             </LinearLayout>
 
