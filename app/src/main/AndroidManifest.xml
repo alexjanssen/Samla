@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.alex.test">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,6 +23,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".GrafikActivity"></activity>
+        <activity android:name=".MapsActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDZpCbvDQWv5Dzqrtdu-uyWzuSOS8nUskw" />
+
     </application>
 
 </manifest>

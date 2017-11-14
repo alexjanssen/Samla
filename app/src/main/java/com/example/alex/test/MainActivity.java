@@ -1,30 +1,24 @@
 package com.example.alex.test;
 
+import android.Manifest;
 import android.content.Intent;
-import android.content.res.Resources;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.os.Handler;
-
-import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<CheckBox> cbL1 = new ArrayList();
@@ -36,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvGravityWert;
     TextView tvProximityWert;
     TextView tvMagnetfeldWert;
+    TextView tvLocationWert;
     Button bttnPush;
     Button bttnStart;
     Button bttnLicht;
@@ -44,12 +39,14 @@ public class MainActivity extends AppCompatActivity {
     Button bttnGravity;
     Button bttnProximity;
     Button bttnMagnetfeld;
+    Button bttnLocation;
     CheckBox cbLicht;
     CheckBox cbAcc;
     CheckBox cbRotation;
     CheckBox cbGravity;
     CheckBox cbProximity;
     CheckBox cbMagnetfeld;
+    CheckBox cbLocation;
     //EditText etDelay;
     SeekBar sbSamplingrate;
     TextView tvSamplingrate;
@@ -64,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);}
 
         sensorupdate = Sensorupdate.getInstance();
 
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
         bttnProximity.setVisibility(View.INVISIBLE);
         bttnMagnetfeld = (Button) findViewById(R.id.bttnMagnetfeld);
         bttnMagnetfeld.setVisibility(View.INVISIBLE);
+        bttnLocation = (Button) findViewById(R.id.bttnLocation);
+        bttnLocation.setVisibility(View.INVISIBLE);
 
 
         cbLicht = (CheckBox) findViewById(R.id.cbLicht);
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
         cbGravity = (CheckBox) findViewById(R.id.cbGravity);
         cbProximity = (CheckBox) findViewById(R.id.cbProximity);
         cbMagnetfeld = (CheckBox) findViewById(R.id.cbMagnetfeld);
+        cbLocation = (CheckBox) findViewById(R.id.cbLocation);
+
 
         tvLichtWert = (TextView) findViewById(R.id.tvLichtWert);
         tvAccWert = (TextView) findViewById(R.id.tvAccWert);
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         tvGravityWert = (TextView) findViewById(R.id.tvGravityWert);
         tvProximityWert = (TextView) findViewById(R.id.tvProximityWert);
         tvMagnetfeldWert = (TextView) findViewById(R.id.tvMagnetfeldWert);
+        tvLocationWert = (TextView) findViewById(R.id.tvLocationWert);
 
         //etDelay = (EditText) findViewById(R.id.etDelay);
         tvSamplingrate =(TextView) findViewById(R.id.tvSamplingrate);
@@ -106,16 +111,18 @@ public class MainActivity extends AppCompatActivity {
         cbL1.add(cbLicht);
         cbL1.add(cbAcc);
         cbL1.add(cbRotation);
-        cbL1.add(cbGravity);
+        cbL1.add(cbGravity);    //auskommentieren für Motorola Moto G
         cbL1.add(cbProximity);
         cbL1.add(cbMagnetfeld);
+        cbL1.add(cbLocation);
 
         tvL2.add(tvLichtWert);
         tvL2.add(tvAccWert);
         tvL2.add(tvRotationWert);
-        tvL2.add(tvGravityWert);
+        tvL2.add(tvGravityWert);  //auskommentieren für Motorola Moto G
         tvL2.add(tvProximityWert);
         tvL2.add(tvMagnetfeldWert);
+        tvL2.add(tvLocationWert);
 
         //samplingrate = Integer.parseInt(etDelay.getText().toString());
         samplingrate = sbSamplingrate.getProgress();
@@ -128,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
                                             sens = new Sensoren(MainActivity.this);
                                             sensorListe = sens.sList;
                                             for (int i = 0; i < cbL1.size() && i < sensorListe.size(); i++) {
+                                                Log.d("bla",sensorListe.get(i).getName());
                                                 cbL1.get(i).setText(sensorListe.get(i).getName());
                                             }
                                             cbLicht.setOnCheckedChangeListener(sens.checkedChangeListener);
@@ -136,18 +144,21 @@ public class MainActivity extends AppCompatActivity {
                                             cbGravity.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbProximity.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbMagnetfeld.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            cbLocation.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbLicht.setChecked(true);
                                             cbAcc.setChecked(true);
                                             cbRotation.setChecked(true);
                                             cbGravity.setChecked(true);
                                             cbProximity.setChecked(true);
                                             cbMagnetfeld.setChecked(true);
+                                            cbLocation.setChecked(true);
                                             bttnLicht.setVisibility(View.VISIBLE);
                                             bttnAcc.setVisibility(View.VISIBLE);
                                             bttnRotation.setVisibility(View.VISIBLE);
                                             bttnGravity.setVisibility(View.VISIBLE);
                                             bttnProximity.setVisibility(View.VISIBLE);
                                             bttnMagnetfeld.setVisibility(View.VISIBLE);
+                                            bttnLocation.setVisibility(View.VISIBLE);
                                         }
                                     }
         );
@@ -209,6 +220,13 @@ public class MainActivity extends AppCompatActivity {
                                              sensorGrafikAufrufen("Magnetfeld");
                                          }
                                      }
+        );
+        bttnLocation.setOnClickListener(new View.OnClickListener() {
+                                              @Override
+                                              public void onClick(View v) {
+                                                  mapAufrufen();
+                                              }
+                                          }
         );
 
         sbSamplingrate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -273,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < sl.size(); i++) {
                         tvL2.get(i).setText(sl.get(i));
                     }
+                    tvL2.get(tvL2.size()-1).setText(sens.getLocation().getLatitude()+" | "+sens.getLocation().getLongitude()+" | "+sens.getLocation().getAltitude());
                 }
             }
         }, i);
@@ -290,4 +309,10 @@ public class MainActivity extends AppCompatActivity {
         intent.putStringArrayListExtra("Sensornamen", sa);
         startActivity(intent);
     }
+
+    public void mapAufrufen(){
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+    }
+
 }
