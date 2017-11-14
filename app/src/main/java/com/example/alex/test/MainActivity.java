@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //toDo
-                Log.d("Handler:", "running...");
+                //Log.d("Handler:", "running...");
                 ha.postDelayed(this, i);
                 if (record) {
                     ArrayList<String> sl = sens.getWerte();

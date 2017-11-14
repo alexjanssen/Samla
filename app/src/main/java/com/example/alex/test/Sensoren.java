@@ -23,6 +23,7 @@ public class Sensoren implements SensorEventListener {
     Context mContext;
     ArrayList<Sensor> sList;
     ArrayList<String> werte = new ArrayList<>();
+    ArrayList<float[]> werteFuerGraph = new ArrayList<>();
     private Sensor mLicht;
     private Sensor mAccelerometer;
     private Sensor mRotation;
@@ -103,7 +104,7 @@ public class Sensoren implements SensorEventListener {
         this.mContext = mContext;
         sensorManager = (SensorManager) mContext.getSystemService(SENSOR_SERVICE);
         mLicht = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mRotation = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         mGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
         mProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
