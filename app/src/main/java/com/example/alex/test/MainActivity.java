@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar sbSamplingrate;
     TextView tvSamplingrate;
     Sensoren sens;
+    Sensorupdate sensorupdate;
     int samplingrate;
     boolean record = false;
 
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sensorupdate = Sensorupdate.getInstance();
 
         bttnPush = (Button) findViewById(R.id.bttnPush);
         bttnStart = (Button) findViewById(R.id.bttnStart);
@@ -161,6 +164,12 @@ public class MainActivity extends AppCompatActivity {
                                                   }
         );
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        Sensorupdate.saveSensorwerte();
+        super.onDestroy();
     }
 
     @Override
