@@ -3,10 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Samla.iml" filepath="$PROJECT_DIR$/Samla.iml" />
-      <module fileurl="file://D:\Android_Studio\workspace\Samla3\Samla.iml" filepath="D:\Android_Studio\workspace\Samla3\Samla.iml" />
-      <module fileurl="file://D:\Benutzer\Dokumente\GitHub\Samla\Samla3.iml" filepath="D:\Benutzer\Dokumente\GitHub\Samla\Samla3.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\Android_Studio\workspace\Samla3\app\app.iml" filepath="D:\Android_Studio\workspace\Samla3\app\app.iml" />
     </modules>
   </component>
 </project>

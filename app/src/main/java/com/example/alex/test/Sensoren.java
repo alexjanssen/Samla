@@ -36,6 +36,7 @@ public class Sensoren implements SensorEventListener {
     MainActivity ma = new MainActivity();
     LocationManager locMan;
     Location loc = null;
+    Sensorupdate sensorupdate;
 
     public CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
@@ -107,6 +108,7 @@ public class Sensoren implements SensorEventListener {
 
     public Sensoren(Context mContext){
         this.mContext = mContext;
+        sensorupdate = Sensorupdate.getInstance();
         sensorManager = (SensorManager) mContext.getSystemService(SENSOR_SERVICE);
         mLicht = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -137,6 +139,7 @@ public class Sensoren implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        sensorupdate.addSensorWert(sensorEvent.sensor.getType(), new Sensorwert(sensorEvent.timestamp, sensorEvent.values));
         String str2 = "";
         Log.d("sensorEvent:", sensorEvent.sensor.getName());
         for(int i=0;i < sList.size();i++){

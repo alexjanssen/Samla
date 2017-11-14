@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import android.os.Handler;
+
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<CheckBox> cbL1 = new ArrayList();
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);}
 
-        sensorupdate = Sensorupdate.getInstance();
+        sensorupdate = Sensorupdate.getInstance(getBaseContext());
 
         bttnPush = (Button) findViewById(R.id.bttnPush);
         bttnStart = (Button) findViewById(R.id.bttnStart);
@@ -182,42 +185,48 @@ public class MainActivity extends AppCompatActivity {
         bttnLicht.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             sensorGrafikAufrufen("Licht");
+                                             sensorGrafikAufrufen(Sensor.TYPE_LIGHT);
+                                             //sensorGrafikAufrufen("Licht");
                                          }
                                      }
         );
         bttnAcc.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             sensorGrafikAufrufen("Acc");
+                                             sensorGrafikAufrufen(Sensor.TYPE_ACCELEROMETER);
+                                             //sensorGrafikAufrufen("Acc");
                                          }
                                      }
         );
         bttnRotation.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             sensorGrafikAufrufen("Rotation");
+                                             sensorGrafikAufrufen(Sensor.TYPE_GYROSCOPE);
+                                             //sensorGrafikAufrufen("Rotation");
                                          }
                                      }
         );
         bttnGravity.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             sensorGrafikAufrufen("Gravity");
+                                             sensorGrafikAufrufen(Sensor.TYPE_GRAVITY);
+                                             //sensorGrafikAufrufen("Gravity");
                                          }
                                      }
         );
         bttnProximity.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             sensorGrafikAufrufen("Proximity");
+                                             sensorGrafikAufrufen(Sensor.TYPE_PROXIMITY);
+                                             //sensorGrafikAufrufen("Proximity");
                                          }
                                      }
         );
         bttnMagnetfeld.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             sensorGrafikAufrufen("Magnetfeld");
+                                             sensorGrafikAufrufen(Sensor.TYPE_MAGNETIC_FIELD);
+                                             //sensorGrafikAufrufen("Magnetfeld");
                                          }
                                      }
         );
@@ -255,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Sensorupdate.saveSensorwerte();
+        sensorupdate.saveSensorwerte();
         super.onDestroy();
     }
 
@@ -298,7 +307,20 @@ public class MainActivity extends AppCompatActivity {
         }, i);
     }
 
-    public void sensorGrafikAufrufen(String sens)
+    /*public void sensorGrafikAufrufen(String sens)
+    {
+        Intent intent = new Intent(this, GrafikActivity.class);
+        intent.putExtra("Sensor", sens);
+        ArrayList<String> sa = new ArrayList<>();
+        for(int i = 0; i < sensorListe.size(); i++)
+        {
+            sa.add(sensorListe.get(i).getName().toString());
+        }
+        intent.putStringArrayListExtra("Sensornamen", sa);
+        startActivity(intent);
+    }*/
+
+    public void sensorGrafikAufrufen(int sens)
     {
         Intent intent = new Intent(this, GrafikActivity.class);
         intent.putExtra("Sensor", sens);

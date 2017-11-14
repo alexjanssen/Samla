@@ -22,10 +22,11 @@ public class GrafikActivity extends AppCompatActivity {
     TextView tvSensor;
     TextView tvWert;
     GraphView graph;
-    String sensor;
+    int sensor;
     ArrayList<String> sensorNamen = new ArrayList<>();
     LinkedList<Sensorwert> werteList = new LinkedList<Sensorwert>();
     Sensoren sens;
+    Sensorupdate sensorupdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,31 +36,30 @@ public class GrafikActivity extends AppCompatActivity {
         tvSensor = (TextView) findViewById(R.id.tvSensor);
         tvWert = (TextView) findViewById(R.id.tvWert);
         graph = (GraphView) findViewById(R.id.graph);
+        sensorupdate = Sensorupdate.getInstance();
 
-        for (int i = 0; i < 400; i++) {
-            werteList.add(new Sensorwert(i, new float[]{new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat()}));
-        }
+        sensor = intent.getIntExtra("Sensor", 0);
+        werteList = sensorupdate.getSensorWerte(sensor);
 
-        sensor = intent.getStringExtra("Sensor");
         sensorNamen = intent.getStringArrayListExtra("Sensornamen");
         switch (sensor) {
-            case "Licht":
+            case Sensor.TYPE_LIGHT:
                 tvSensor.setText(sensorNamen.get(0));
 
                 break;
-            case "Acc":
+            case Sensor.TYPE_ACCELEROMETER:
                 tvSensor.setText(sensorNamen.get(1));
                 break;
-            case "Rotation":
+            case Sensor.TYPE_GYROSCOPE:
                 tvSensor.setText(sensorNamen.get(2));
                 break;
-            case "Gravity":
+            case Sensor.TYPE_GRAVITY:
                 tvSensor.setText(sensorNamen.get(3));
                 break;
-            case "Proximity":
+            case Sensor.TYPE_PROXIMITY:
                 tvSensor.setText(sensorNamen.get(4));
                 break;
-            case "Megnetfeld":
+            case Sensor.TYPE_MAGNETIC_FIELD:
                 tvSensor.setText(sensorNamen.get(5));
                 break;
             default:
@@ -73,7 +73,7 @@ public class GrafikActivity extends AppCompatActivity {
         s2.setColor(Color.YELLOW);
         s3.setColor(Color.GREEN);
 
-        if(sensor.equals("Licht") || sensor.equals("Proximity")) {
+        if(sensor == Sensor.TYPE_LIGHT || sensor == Sensor.TYPE_PROXIMITY) {
             for (int i = 0; i < werteList.size(); i++) {
                 DataPoint dp = new DataPoint(werteList.get(i).getTimestamp(), werteList.get(i).getValues()[0]);
                 s1.appendData(dp, false, 10000);
