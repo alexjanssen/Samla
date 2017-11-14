@@ -88,14 +88,21 @@
 
                 <CheckBox
                     android:id="@+id/cbLicht"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:checked="false"
                     android:text="Lichtsensor"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:layout_editor_absoluteY="83dp" />
+
+                <Button
+                    android:id="@+id/bttnLicht"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Button_für_Weiterleitung" />
 
             </LinearLayout>
 
@@ -117,14 +124,21 @@
 
                 <CheckBox
                     android:id="@+id/cbAcc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="Beschleunigungssensor"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvLichtWert" />
+
+                <Button
+                    android:id="@+id/bttnAcc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Button_für_Weiterleitung" />
 
             </LinearLayout>
 
@@ -146,14 +160,21 @@
 
                 <CheckBox
                     android:id="@+id/cbRotation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="Rotationssensor"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvAccWert" />
+
+                <Button
+                    android:id="@+id/bttnRotation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Button_für_Weiterleitung" />
 
             </LinearLayout>
 
@@ -175,14 +196,21 @@
 
                 <CheckBox
                     android:id="@+id/cbGravity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="Gravitationssensor"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvRotationWert" />
+
+                <Button
+                    android:id="@+id/bttnGravity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Button_für_Weiterleitung" />
 
             </LinearLayout>
 
@@ -204,14 +232,21 @@
 
                 <CheckBox
                     android:id="@+id/cbProximity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="Annäherungssensor"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvGravityWert" />
+
+                <Button
+                    android:id="@+id/bttnProximity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Button_für_Weiterleitung" />
 
             </LinearLayout>
 
@@ -233,14 +268,21 @@
 
                 <CheckBox
                     android:id="@+id/cbMagnetfeld"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="Magnetfeld"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvProximityWert" />
+
+                <Button
+                    android:id="@+id/bttnMagnetfeld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/Button_für_Weiterleitung" />
 
             </LinearLayout>
 

@@ -21,7 +21,7 @@ import static android.content.Context.SENSOR_SERVICE;
 public class Sensoren implements SensorEventListener {
     private SensorManager sensorManager;
     Context mContext;
-    List<Sensor> sList;
+    ArrayList<Sensor> sList;
     ArrayList<String> werte = new ArrayList<>();
     private Sensor mLicht;
     private Sensor mAccelerometer;
@@ -140,14 +140,6 @@ public class Sensoren implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
-    }
-
-    public ArrayList<String> getAllSensorNames(){
-        ArrayList<String> sen = new ArrayList<>();
-        for(int i=0;i < sList.size();i++){
-            sen.add(sList.get(i).getName());
-        }
-        return sen;
     }
 
     public ArrayList<String> getWerte(){

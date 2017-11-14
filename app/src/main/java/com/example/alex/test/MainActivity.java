@@ -1,5 +1,6 @@
 package com.example.alex.test;
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.os.Bundle;
@@ -37,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
     TextView tvMagnetfeldWert;
     Button bttnPush;
     Button bttnStart;
+    Button bttnLicht;
+    Button bttnAcc;
+    Button bttnRotation;
+    Button bttnGravity;
+    Button bttnProximity;
+    Button bttnMagnetfeld;
     CheckBox cbLicht;
     CheckBox cbAcc;
     CheckBox cbRotation;
@@ -47,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     SeekBar sbSamplingrate;
     TextView tvSamplingrate;
     Sensoren sens;
+    ArrayList<Sensor> sensorListe;
     Sensorupdate sensorupdate;
     int samplingrate;
     boolean record = false;
@@ -61,6 +69,19 @@ public class MainActivity extends AppCompatActivity {
 
         bttnPush = (Button) findViewById(R.id.bttnPush);
         bttnStart = (Button) findViewById(R.id.bttnStart);
+        bttnLicht = (Button) findViewById(R.id.bttnLicht);
+        bttnLicht.setVisibility(View.INVISIBLE);
+        bttnAcc = (Button) findViewById(R.id.bttnAcc);
+        bttnAcc.setVisibility(View.INVISIBLE);
+        bttnRotation = (Button) findViewById(R.id.bttnRotation);
+        bttnRotation.setVisibility(View.INVISIBLE);
+        bttnGravity = (Button) findViewById(R.id.bttnGravity);
+        bttnGravity.setVisibility(View.INVISIBLE);
+        bttnProximity = (Button) findViewById(R.id.bttnProximity);
+        bttnProximity.setVisibility(View.INVISIBLE);
+        bttnMagnetfeld = (Button) findViewById(R.id.bttnMagnetfeld);
+        bttnMagnetfeld.setVisibility(View.INVISIBLE);
+
 
         cbLicht = (CheckBox) findViewById(R.id.cbLicht);
         cbAcc = (CheckBox) findViewById(R.id.cbAcc);
@@ -79,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
         //etDelay = (EditText) findViewById(R.id.etDelay);
         tvSamplingrate =(TextView) findViewById(R.id.tvSamplingrate);
         sbSamplingrate = (SeekBar) findViewById(R.id.sbSamplingrate);
-        sbSamplingrate.setMax(1000);
-        sbSamplingrate.setProgress(50);
+        sbSamplingrate.setMax(120);
+        sbSamplingrate.setProgress(1);
 
         cbL1.add(cbLicht);
         cbL1.add(cbAcc);
@@ -98,17 +119,17 @@ public class MainActivity extends AppCompatActivity {
 
         //samplingrate = Integer.parseInt(etDelay.getText().toString());
         samplingrate = sbSamplingrate.getProgress();
+        samplingrate = samplingrate *100;
         tvSamplingrate.setText("Samplingrate: "+samplingrate);
 
         bttnPush.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             sens = new Sensoren(MainActivity.this);
-                                            List<String> sl = sens.getAllSensorNames();
-                                            for (int i = 0; i < cbL1.size() && i < sl.size(); i++) {
-                                                cbL1.get(i).setText(sens.sList.get(i).getName());
+                                            sensorListe = sens.sList;
+                                            for (int i = 0; i < cbL1.size() && i < sensorListe.size(); i++) {
+                                                cbL1.get(i).setText(sensorListe.get(i).getName());
                                             }
-
                                             cbLicht.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbAcc.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbRotation.setOnCheckedChangeListener(sens.checkedChangeListener);
@@ -121,8 +142,12 @@ public class MainActivity extends AppCompatActivity {
                                             cbGravity.setChecked(true);
                                             cbProximity.setChecked(true);
                                             cbMagnetfeld.setChecked(true);
-
-
+                                            bttnLicht.setVisibility(View.VISIBLE);
+                                            bttnAcc.setVisibility(View.VISIBLE);
+                                            bttnRotation.setVisibility(View.VISIBLE);
+                                            bttnGravity.setVisibility(View.VISIBLE);
+                                            bttnProximity.setVisibility(View.VISIBLE);
+                                            bttnMagnetfeld.setVisibility(View.VISIBLE);
                                         }
                                     }
         );
@@ -143,6 +168,49 @@ public class MainActivity extends AppCompatActivity {
                                      }
         );
 
+        bttnLicht.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             sensorGrafikAufrufen("Licht");
+                                         }
+                                     }
+        );
+        bttnAcc.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             sensorGrafikAufrufen("Acc");
+                                         }
+                                     }
+        );
+        bttnRotation.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             sensorGrafikAufrufen("Rotation");
+                                         }
+                                     }
+        );
+        bttnGravity.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             sensorGrafikAufrufen("Gravity");
+                                         }
+                                     }
+        );
+        bttnProximity.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             sensorGrafikAufrufen("Proximity");
+                                         }
+                                     }
+        );
+        bttnMagnetfeld.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             sensorGrafikAufrufen("Magnetfeld");
+                                         }
+                                     }
+        );
+
         sbSamplingrate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                                       @Override
                                                       public void onStopTrackingTouch(SeekBar seekBar) {
@@ -158,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                                                       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                                                           // TODO Auto-generated method stub
                                                           samplingrate = progress;
+                                                          samplingrate = samplingrate *100;
                                                           tvSamplingrate.setText("Samplingrate: "+samplingrate);
                                                           handler(samplingrate);
                                                       }
@@ -207,5 +276,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }, i);
+    }
+
+    public void sensorGrafikAufrufen(String sens)
+    {
+        Intent intent = new Intent(this, GrafikActivity.class);
+        intent.putExtra("Sensor", sens);
+        ArrayList<String> sa = new ArrayList<>();
+        for(int i = 0; i < sensorListe.size(); i++)
+        {
+            sa.add(sensorListe.get(i).getName().toString());
+        }
+        intent.putStringArrayListExtra("Sensornamen", sa);
+        startActivity(intent);
     }
 }
