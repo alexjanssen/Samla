@@ -1,16 +1,19 @@
 package com.example.alex.test;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.CompoundButton;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.MissingResourceException;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -31,6 +34,8 @@ public class Sensoren implements SensorEventListener {
     private Sensor mProximity;
     private Sensor mMagnetfeld;
     MainActivity ma = new MainActivity();
+    LocationManager locMan;
+    Location loc = null;
 
     public CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
@@ -58,7 +63,7 @@ public class Sensoren implements SensorEventListener {
                         sensorUnregister(mProximity);
                         break;
 
-                    case R.id.cbMagnetfeld:
+                    case R.id.cbLocation:
                         sensorUnregister(mMagnetfeld);
                         break;
 
@@ -89,7 +94,7 @@ public class Sensoren implements SensorEventListener {
                         sensorRegister(mProximity);
                         break;
 
-                    case R.id.cbMagnetfeld:
+                    case R.id.cbLocation:
                         sensorRegister(mMagnetfeld);
                         break;
 
@@ -106,13 +111,20 @@ public class Sensoren implements SensorEventListener {
         mLicht = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mRotation = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        mGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY); //auskommentieren für Motorola Moto G
         mProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mMagnetfeld = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sList = new ArrayList<>();
-        sList.add(mLicht);sList.add(mAccelerometer);sList.add(mRotation);sList.add(mGravity);
-        sList.add(mProximity);sList.add(mMagnetfeld);
+        sList.add(mLicht);
+        sList.add(mAccelerometer);
+        sList.add(mRotation);
+        sList.add(mGravity);      //auskommentieren für Motorola Moto G
+        sList.add(mProximity);
+        sList.add(mMagnetfeld);
         werte.add("");werte.add("");werte.add("");werte.add("");werte.add("");werte.add("");
+
+        locMan = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        initLocMan();
     }
 
     public void sensorRegister(Sensor s) {
@@ -143,8 +155,35 @@ public class Sensoren implements SensorEventListener {
 
     }
 
+
+    @SuppressLint("MissingPermission")
+    private void initLocMan(){
+        LocationListener locList = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                loc = location;
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {}
+
+            @Override
+            public void onProviderEnabled(String s) {}
+
+            @Override
+            public void onProviderDisabled(String s) {}
+        };
+
+        locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locList);
+    }
+
     public ArrayList<String> getWerte(){
         return werte;
+    }
+
+    public Location getLocation(){
+        return loc;
     }
 
 }
