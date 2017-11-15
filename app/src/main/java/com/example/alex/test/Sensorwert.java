@@ -11,6 +11,7 @@ public class Sensorwert {
     public Sensorwert(long timestamp, float[] values) {
         this.timestamp = timestamp;
         this.values = values.clone();
+        if (values.length < 3) this.values = new float[]{values[0], 0.0f, 0.0f};
     }
 
     public float[] getValues() {

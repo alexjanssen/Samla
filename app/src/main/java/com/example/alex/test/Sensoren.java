@@ -130,7 +130,7 @@ public class Sensoren implements SensorEventListener {
     }
 
     public void sensorRegister(Sensor s) {
-        sensorManager.registerListener(this, s, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, s, 100000);
     }
     public void sensorUnregister(Sensor s)
     {
