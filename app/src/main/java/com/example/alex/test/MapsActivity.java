@@ -81,6 +81,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void location() {
         //Automatisch generierter Permissioncheck.
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //mMap.setMyLocationEnabled(true);
             if(sens.getLocation()!=null){
 
                 mMap.clear();

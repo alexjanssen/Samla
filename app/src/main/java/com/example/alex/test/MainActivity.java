@@ -300,8 +300,10 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < sl.size(); i++) {
                         tvL2.get(i).setText(sl.get(i));
                     }
-
-                    tvL2.get(tvL2.size()-1).setText(sens.getLocation().getLatitude()+" | "+sens.getLocation().getLongitude()+" | "+sens.getLocation().getAltitude());
+                    //############################################################
+                    if(sens.getLocation() != null) {
+                        tvL2.get(tvL2.size() - 1).setText(sens.getLocation().getLatitude() + " | " + sens.getLocation().getLongitude() + " | " + sens.getLocation().getAltitude());
+                    }
                 }
             }
         }, i);
