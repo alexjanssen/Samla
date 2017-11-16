@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -33,12 +34,16 @@ public class GrafikActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grafik);
         Intent intent = getIntent();
-        tvSensor = (TextView) findViewById(R.id.tvSensor);
+
+
+        tvSensor = findViewById(R.id.tvSensor);
         tvWert = (TextView) findViewById(R.id.tvWert);
         graph = (GraphView) findViewById(R.id.graph);
         sensorupdate = Sensorupdate.getInstance();
 
         sensor = intent.getIntExtra("Sensor", 0);
+        Log.d("Sensor",sensor+"");
+
         werteList = sensorupdate.getSensorWerte(sensor);
 
         sensorNamen = intent.getStringArrayListExtra("Sensornamen");
@@ -53,14 +58,14 @@ public class GrafikActivity extends AppCompatActivity {
             case Sensor.TYPE_GYROSCOPE:
                 tvSensor.setText(sensorNamen.get(2));
                 break;
-            case Sensor.TYPE_GRAVITY:
+            //case Sensor.TYPE_GRAVITY:
+            //    tvSensor.setText(sensorNamen.get(3));
+            //    break;
+            case Sensor.TYPE_PROXIMITY:
                 tvSensor.setText(sensorNamen.get(3));
                 break;
-            case Sensor.TYPE_PROXIMITY:
-                tvSensor.setText(sensorNamen.get(4));
-                break;
             case Sensor.TYPE_MAGNETIC_FIELD:
-                tvSensor.setText(sensorNamen.get(5));
+                tvSensor.setText(sensorNamen.get(4));
                 break;
             default:
                 break;

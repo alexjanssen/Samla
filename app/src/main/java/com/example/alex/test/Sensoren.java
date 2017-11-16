@@ -56,9 +56,9 @@ public class Sensoren implements SensorEventListener {
                         sensorUnregister(mRotation);
                         break;
 
-                    case R.id.cbGravity:
+                    /*case R.id.cbGravity:
                         sensorUnregister(mGravity);
-                        break;
+                        break;*/
 
                     case R.id.cbProximity:
                         sensorUnregister(mProximity);
@@ -87,9 +87,9 @@ public class Sensoren implements SensorEventListener {
                         sensorRegister(mRotation);
                         break;
 
-                    case R.id.cbGravity:
+                    /*case R.id.cbGravity:
                         sensorRegister(mGravity);
-                        break;
+                        break;*/
 
                     case R.id.cbProximity:
                         sensorRegister(mProximity);
@@ -112,18 +112,26 @@ public class Sensoren implements SensorEventListener {
         sensorManager = (SensorManager) mContext.getSystemService(SENSOR_SERVICE);
         mLicht = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mRotation = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        mGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY); //auskommentieren für Motorola Moto G
+
+        //#############################################################################
+        //#############################################################################
+        //Bitte anpassen für das entsprechende Gerät
+        mRotation = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        //mRotation = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        //#############################################################################
+        //#############################################################################
+
+        //mGravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY); //auskommentieren für Motorola Moto G
         mProximity = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
         mMagnetfeld = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         sList = new ArrayList<>();
         sList.add(mLicht);
         sList.add(mAccelerometer);
         sList.add(mRotation);
-        sList.add(mGravity);      //auskommentieren für Motorola Moto G
+        //sList.add(mGravity);      //auskommentieren für Motorola Moto G
         sList.add(mProximity);
         sList.add(mMagnetfeld);
-        werte.add("");werte.add("");werte.add("");werte.add("");werte.add("");werte.add("");
+        werte.add("");werte.add("");werte.add("");werte.add("");werte.add("");//werte.add("");
 
         locMan = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         initLocMan();
@@ -141,7 +149,7 @@ public class Sensoren implements SensorEventListener {
     public void onSensorChanged(SensorEvent sensorEvent) {
         sensorupdate.addSensorWert(sensorEvent.sensor.getType(), new Sensorwert(sensorEvent.timestamp, sensorEvent.values));
         String str2 = "";
-        Log.d("sensorEvent:", sensorEvent.sensor.getName());
+        //Log.d("sensorEvent:", sensorEvent.sensor.getName());
         for(int i=0;i < sList.size();i++){
             if(sensorEvent.sensor.getType() == sList.get(i).getType()){
 

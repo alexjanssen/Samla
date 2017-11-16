@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         bttnAcc.setVisibility(View.INVISIBLE);
         bttnRotation = (Button) findViewById(R.id.bttnRotation);
         bttnRotation.setVisibility(View.INVISIBLE);
-        bttnGravity = (Button) findViewById(R.id.bttnGravity);
-        bttnGravity.setVisibility(View.INVISIBLE);
+        //bttnGravity = (Button) findViewById(R.id.bttnGravity);
+        //bttnGravity.setVisibility(View.INVISIBLE);
         bttnProximity = (Button) findViewById(R.id.bttnProximity);
         bttnProximity.setVisibility(View.INVISIBLE);
         bttnMagnetfeld = (Button) findViewById(R.id.bttnMagnetfeld);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         cbLicht = (CheckBox) findViewById(R.id.cbLicht);
         cbAcc = (CheckBox) findViewById(R.id.cbAcc);
         cbRotation = (CheckBox) findViewById(R.id.cbRotation);
-        cbGravity = (CheckBox) findViewById(R.id.cbGravity);
+        //cbGravity = (CheckBox) findViewById(R.id.cbGravity);
         cbProximity = (CheckBox) findViewById(R.id.cbProximity);
         cbMagnetfeld = (CheckBox) findViewById(R.id.cbMagnetfeld);
         cbLocation = (CheckBox) findViewById(R.id.cbLocation);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         tvLichtWert = (TextView) findViewById(R.id.tvLichtWert);
         tvAccWert = (TextView) findViewById(R.id.tvAccWert);
         tvRotationWert = (TextView) findViewById(R.id.tvRotationWert);
-        tvGravityWert = (TextView) findViewById(R.id.tvGravityWert);
+        //tvGravityWert = (TextView) findViewById(R.id.tvGravityWert);
         tvProximityWert = (TextView) findViewById(R.id.tvProximityWert);
         tvMagnetfeldWert = (TextView) findViewById(R.id.tvMagnetfeldWert);
         tvLocationWert = (TextView) findViewById(R.id.tvLocationWert);
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         cbL1.add(cbLicht);
         cbL1.add(cbAcc);
         cbL1.add(cbRotation);
-        cbL1.add(cbGravity);    //auskommentieren für Motorola Moto G
+        //cbL1.add(cbGravity);    //auskommentieren für Motorola Moto G
         cbL1.add(cbProximity);
         cbL1.add(cbMagnetfeld);
         cbL1.add(cbLocation);
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         tvL2.add(tvLichtWert);
         tvL2.add(tvAccWert);
         tvL2.add(tvRotationWert);
-        tvL2.add(tvGravityWert);  //auskommentieren für Motorola Moto G
+        //tvL2.add(tvGravityWert);  //auskommentieren für Motorola Moto G
         tvL2.add(tvProximityWert);
         tvL2.add(tvMagnetfeldWert);
         tvL2.add(tvLocationWert);
@@ -144,21 +144,21 @@ public class MainActivity extends AppCompatActivity {
                                             cbLicht.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbAcc.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbRotation.setOnCheckedChangeListener(sens.checkedChangeListener);
-                                            cbGravity.setOnCheckedChangeListener(sens.checkedChangeListener);
+                                            //cbGravity.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbProximity.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbMagnetfeld.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbLocation.setOnCheckedChangeListener(sens.checkedChangeListener);
                                             cbLicht.setChecked(true);
                                             cbAcc.setChecked(true);
                                             cbRotation.setChecked(true);
-                                            cbGravity.setChecked(true);
+                                            //cbGravity.setChecked(true);
                                             cbProximity.setChecked(true);
                                             cbMagnetfeld.setChecked(true);
                                             cbLocation.setChecked(true);
                                             bttnLicht.setVisibility(View.VISIBLE);
                                             bttnAcc.setVisibility(View.VISIBLE);
                                             bttnRotation.setVisibility(View.VISIBLE);
-                                            bttnGravity.setVisibility(View.VISIBLE);
+                                            //bttnGravity.setVisibility(View.VISIBLE);
                                             bttnProximity.setVisibility(View.VISIBLE);
                                             bttnMagnetfeld.setVisibility(View.VISIBLE);
                                             bttnLocation.setVisibility(View.VISIBLE);
@@ -201,23 +201,24 @@ public class MainActivity extends AppCompatActivity {
         bttnRotation.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             sensorGrafikAufrufen(Sensor.TYPE_GYROSCOPE);
+                                             sensorGrafikAufrufen(Sensor.TYPE_ORIENTATION);
                                              //sensorGrafikAufrufen("Rotation");
                                          }
                                      }
         );
-        bttnGravity.setOnClickListener(new View.OnClickListener() {
+        /*bttnGravity.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
                                              sensorGrafikAufrufen(Sensor.TYPE_GRAVITY);
                                              //sensorGrafikAufrufen("Gravity");
                                          }
                                      }
-        );
+        );*/
         bttnProximity.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
                                              sensorGrafikAufrufen(Sensor.TYPE_PROXIMITY);
+                                             //sensorGrafikAufrufen(8);
                                              //sensorGrafikAufrufen("Proximity");
                                          }
                                      }
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
                                          @Override
                                          public void onClick(View v) {
                                              sensorGrafikAufrufen(Sensor.TYPE_MAGNETIC_FIELD);
+                                             //sensorGrafikAufrufen(2);
                                              //sensorGrafikAufrufen("Magnetfeld");
                                          }
                                      }

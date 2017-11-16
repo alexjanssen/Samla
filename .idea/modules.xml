@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Samla.iml" filepath="$PROJECT_DIR$/Samla.iml" />
+      <module fileurl="file://D:\Android_Studio\workspace\Samla4\Samla.iml" filepath="D:\Android_Studio\workspace\Samla4\Samla.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Samla4.iml" filepath="$PROJECT_DIR$/Samla4.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

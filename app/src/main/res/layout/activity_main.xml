@@ -194,36 +194,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/cbGravity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1"
-                    android:text="Gravitationssensor"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvRotationWert" />
-
-                <Button
-                    android:id="@+id/bttnGravity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/Button_für_Weiterleitung" />
-
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvGravityWert"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cbGravity" />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -53,6 +53,7 @@ public class Sensorupdate {
         try {
             sensoren.get(sensor).add(wert);
         } catch (NullPointerException ex) {
+            Log.d("Sensorupdate;",wert+";;"+sensor);
             sensoren.put(sensor, new LinkedList<Sensorwert>());
             sensoren.get(sensor).add(wert);
         }
