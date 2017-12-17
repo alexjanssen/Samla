@@ -36,8 +36,8 @@ public class Sensorupdate {
     private int newWerteCount = 0;
     private int updateThreshold = 200;
     public final int TYPE_GPS = 1337;
-    private String android_id = null;
-    private RequestQueue requestQueue;
+    public String android_id = null;
+    public RequestQueue requestQueue;
     private Response.ErrorListener errorListener;
 
     private Sensorupdate(){

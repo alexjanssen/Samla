@@ -23,13 +23,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GrafikActivity"></activity>
-        <activity android:name=".MapsActivity"></activity>
+        <activity android:name=".GrafikActivity" />
+        <activity android:name=".MapsActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDZpCbvDQWv5Dzqrtdu-uyWzuSOS8nUskw" />
+            android:value="AIzaSyDHM8-Zh3uYpCrFf_cRV_EGdRVIWpKCBSg" />
 
+        <activity
+            android:name=".NewMapsActivity"
+            android:label="@string/title_activity_new_maps">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alex.test.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

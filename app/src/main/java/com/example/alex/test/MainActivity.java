@@ -65,8 +65,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);}
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
 
         sensorupdate = Sensorupdate.getInstance(getApplicationContext());
 
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         bttnMagnetfeld = (Button) findViewById(R.id.bttnMagnetfeld);
         bttnMagnetfeld.setVisibility(View.INVISIBLE);
         bttnLocation = (Button) findViewById(R.id.bttnLocation);
-        bttnLocation.setVisibility(View.INVISIBLE);
+        // bttnLocation.setVisibility(View.INVISIBLE);
 
 
         cbLicht = (CheckBox) findViewById(R.id.cbLicht);
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         tvLocationWert = (TextView) findViewById(R.id.tvLocationWert);
 
         //etDelay = (EditText) findViewById(R.id.etDelay);
-        tvSamplingrate =(TextView) findViewById(R.id.tvSamplingrate);
+        tvSamplingrate = (TextView) findViewById(R.id.tvSamplingrate);
         sbSamplingrate = (SeekBar) findViewById(R.id.sbSamplingrate);
         sbSamplingrate.setMax(120);
         sbSamplingrate.setProgress(1);
@@ -129,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
         //samplingrate = Integer.parseInt(etDelay.getText().toString());
         samplingrate = sbSamplingrate.getProgress();
-        samplingrate = samplingrate *100;
-        tvSamplingrate.setText("Samplingrate: "+samplingrate);
+        samplingrate = samplingrate * 100;
+        tvSamplingrate.setText("Samplingrate: " + samplingrate);
 
         bttnPush.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                             sens = new Sensoren(MainActivity.this);
                                             sensorListe = sens.sList;
                                             for (int i = 0; i < cbL1.size() && i < sensorListe.size(); i++) {
-                                                Log.d("bla",sensorListe.get(i).getName());
+                                                Log.d("bla", sensorListe.get(i).getName());
                                                 cbL1.get(i).setText(sensorListe.get(i).getName());
                                             }
                                             cbLicht.setOnCheckedChangeListener(sens.checkedChangeListener);
@@ -166,45 +167,33 @@ public class MainActivity extends AppCompatActivity {
                                     }
         );
 
-        bttnStart.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             if (bttnStart.getText() == "start") {
-                                                 bttnStart.setText("stop");
-                                                 bttnStart.invalidate();
-                                                 record = true;
-                                                 handler(samplingrate);
-                                             } else {
-                                                 bttnStart.setText("start");
-                                                 record = false;
-                                             }
-                                         }
-                                     }
+        bttnStart.setOnClickListener(v -> {
+                    if (bttnStart.getText() == "start") {
+                        bttnStart.setText("stop");
+                        bttnStart.invalidate();
+                        record = true;
+                        handler(samplingrate);
+                    } else {
+                        bttnStart.setText("start");
+                        record = false;
+                    }
+                }
         );
 
-        bttnLicht.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             sensorGrafikAufrufen(Sensor.TYPE_LIGHT);
-                                             //sensorGrafikAufrufen("Licht");
-                                         }
-                                     }
+        bttnLicht.setOnClickListener(v -> {
+                    sensorGrafikAufrufen(Sensor.TYPE_LIGHT);
+                    //sensorGrafikAufrufen("Licht");
+                }
         );
-        bttnAcc.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             sensorGrafikAufrufen(Sensor.TYPE_ACCELEROMETER);
-                                             //sensorGrafikAufrufen("Acc");
-                                         }
-                                     }
+        bttnAcc.setOnClickListener(v -> {
+                    sensorGrafikAufrufen(Sensor.TYPE_ACCELEROMETER);
+                    //sensorGrafikAufrufen("Acc");
+                }
         );
-        bttnRotation.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             sensorGrafikAufrufen(Sensor.TYPE_ORIENTATION);
-                                             //sensorGrafikAufrufen("Rotation");
-                                         }
-                                     }
+        bttnRotation.setOnClickListener(v -> {
+                    sensorGrafikAufrufen(Sensor.TYPE_ORIENTATION);
+                    //sensorGrafikAufrufen("Rotation");
+                }
         );
         /*bttnGravity.setOnClickListener(new View.OnClickListener() {
                                          @Override
@@ -214,30 +203,19 @@ public class MainActivity extends AppCompatActivity {
                                          }
                                      }
         );*/
-        bttnProximity.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             sensorGrafikAufrufen(Sensor.TYPE_PROXIMITY);
-                                             //sensorGrafikAufrufen(8);
-                                             //sensorGrafikAufrufen("Proximity");
-                                         }
-                                     }
+        bttnProximity.setOnClickListener(v -> {
+                    sensorGrafikAufrufen(Sensor.TYPE_PROXIMITY);
+                    //sensorGrafikAufrufen(8);
+                    //sensorGrafikAufrufen("Proximity");
+                }
         );
-        bttnMagnetfeld.setOnClickListener(new View.OnClickListener() {
-                                         @Override
-                                         public void onClick(View v) {
-                                             sensorGrafikAufrufen(Sensor.TYPE_MAGNETIC_FIELD);
-                                             //sensorGrafikAufrufen(2);
-                                             //sensorGrafikAufrufen("Magnetfeld");
-                                         }
-                                     }
+        bttnMagnetfeld.setOnClickListener(v -> {
+                    sensorGrafikAufrufen(Sensor.TYPE_MAGNETIC_FIELD);
+                    //sensorGrafikAufrufen(2);
+                    //sensorGrafikAufrufen("Magnetfeld");
+                }
         );
-        bttnLocation.setOnClickListener(new View.OnClickListener() {
-                                              @Override
-                                              public void onClick(View v) {
-                                                  mapAufrufen();
-                                              }
-                                          }
+        bttnLocation.setOnClickListener(v -> mapAufrufen()
         );
 
         sbSamplingrate.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -255,8 +233,8 @@ public class MainActivity extends AppCompatActivity {
                                                       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                                                           // TODO Auto-generated method stub
                                                           samplingrate = progress;
-                                                          samplingrate = samplingrate *100;
-                                                          tvSamplingrate.setText("Samplingrate: "+samplingrate);
+                                                          samplingrate = samplingrate * 100;
+                                                          tvSamplingrate.setText("Samplingrate: " + samplingrate);
                                                           handler(samplingrate);
                                                       }
                                                   }
@@ -303,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
                         tvL2.get(i).setText(sl.get(i));
                     }
                     //############################################################
-                    if(sens.getLocation() != null) {
+                    if (sens.getLocation() != null) {
                         tvL2.get(tvL2.size() - 1).setText(sens.getLocation().getLatitude() + " | " + sens.getLocation().getLongitude() + " | " + sens.getLocation().getAltitude());
                     }
                 }
@@ -324,21 +302,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }*/
 
-    public void sensorGrafikAufrufen(int sens)
-    {
+    public void sensorGrafikAufrufen(int sens) {
         Intent intent = new Intent(this, GrafikActivity.class);
         intent.putExtra("Sensor", sens);
         ArrayList<String> sa = new ArrayList<>();
-        for(int i = 0; i < sensorListe.size(); i++)
-        {
-            sa.add(sensorListe.get(i).getName().toString());
+        for (int i = 0; i < sensorListe.size(); i++) {
+            sa.add(sensorListe.get(i).getName());
         }
         intent.putStringArrayListExtra("Sensornamen", sa);
         startActivity(intent);
     }
 
-    public void mapAufrufen(){
-        Intent intent = new Intent(this, MapsActivity.class);
+    public void mapAufrufen() {
+        Intent intent = new Intent(this, NewMapsActivity.class);
         startActivity(intent);
     }
 
