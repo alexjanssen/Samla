@@ -37,6 +37,8 @@ public class Strecke {
         Sensorwert start, end;
         for (int i = 0; i < aufgezeichneteWerte.size(); i++) {
             tmp.add(new LinkedList<>());
+            //eigentlich müsste man auf nummer sicher gehen und hier nach timestamp sorten. Das niedrige API level lässt dies aber leider nicht so einfach zu
+            //aufgezeichneteWerte.get(i).sort((a, b) -> Long.compare(a.getTimestamp(), b.getTimestamp()));
             start = aufgezeichneteWerte.get(i).getFirst();
             end = aufgezeichneteWerte.get(i).getLast();
             double latdif = end.getValues()[0] - start.getValues()[0];

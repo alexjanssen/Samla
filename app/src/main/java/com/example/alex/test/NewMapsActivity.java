@@ -27,6 +27,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -114,7 +115,7 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
                 locationRequest = LocationRequest.create();
                 locationRequest.setInterval(LOCATION_INTERVAL);
                 locationRequest.setMaxWaitTime(LOCATION_INTERVAL);
-                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
 
                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
             } catch (SecurityException ex) {
@@ -186,9 +187,15 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
                             recordedPositions.add(mMap.addCircle(new CircleOptions().radius(1.0).center(new LatLng(values[0], values[1]))));
                         }
                     }
+
+                    LatLng center = null;
                     for (LinkedList<Sensorwert> list : aktuelleStrecke.interpolierteWerte())
-                        for (Sensorwert sensorwert : list)
-                            recordedPositions.add(mMap.addCircle(new CircleOptions().radius(0.5).center(sensorwert.getLatLng()).fillColor(Color.BLUE)));
+                        for (Sensorwert sensorwert : list) {
+                            center = sensorwert.getLatLng();
+                            recordedPositions.add(mMap.addCircle(new CircleOptions().radius(0.5).center(center).fillColor(Color.BLUE)));
+                        }
+                    if (center != null)
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
 
                     //TODO An dieser stelle kann mit aktuelleStrecke.aufgezeichneteWerteDif() die differenzen durchgegangen werden
                     //aktuelleStrecke.aufgezeichneteWerte               Liste der Streckenabschnitte
