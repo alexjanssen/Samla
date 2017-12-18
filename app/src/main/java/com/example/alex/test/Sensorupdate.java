@@ -35,7 +35,7 @@ public class Sensorupdate {
     private static SparseArray<LinkedList<Sensorwert>> newSensorData;
     private int newWerteCount = 0;
     private int updateThreshold = 200;
-    public final int TYPE_GPS = 1337;
+    public final int TYPE_GPS = 1338;
     public String android_id = null;
     public RequestQueue requestQueue;
     private Response.ErrorListener errorListener;
@@ -124,9 +124,9 @@ public class Sensorupdate {
                         JSONArray sensorvalues = response.getJSONArray("Sensorvalues");
                         for (int i = 0; i < sensorvalues.length(); i++){
                             long timestamp = sensorvalues.getJSONObject(i).getLong("Timestamp");
-                            float[] values = new float[3];
+                            double[] values = new double[3];
                             for (int j = 0; j < 3; j++){
-                                values[j] = (float)sensorvalues.getJSONObject(i).getJSONArray("Values").getDouble(j);
+                                values[j] = sensorvalues.getJSONObject(i).getJSONArray("Values").getDouble(j);
                             }
                             tmp.add(new Sensorwert(timestamp, values));
                         }

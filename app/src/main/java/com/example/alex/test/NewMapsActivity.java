@@ -19,6 +19,7 @@ import android.widget.ToggleButton;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.Request;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -30,10 +31,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,23 +52,50 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
     private Marker aktuellePositionMarker;
     private RequestQueue requestQueue;
     private ArrayList<Strecke> streckeArrayList = new ArrayList<>();
-    private Spinner spinnerStrecke;
+    private ArrayList<Session> sessionArrayList = new ArrayList<>();
+    private Spinner spinnerStrecke, spinnerSessions;
     private LinkedList<Marker> streckenMarker = new LinkedList<>();
-    private Sensorupdate sensorupdate = Sensorupdate.getInstance();
+    private LinkedList<Circle> recordedPositions = new LinkedList<>();
+    private Sensorupdate sensorupdate;
     private TextView tvNextcheckpoint, tvPositioncount;
     private ToggleButton bttnStartStop, bttnPauseContinue;
+    private Button bttnLoadSession;
     private LinearLayout llRecordData;
     private int nextCheckpoint = 1;
     private Gpssession gpssession;
+    private Strecke aktuelleStrecke;
+    private LocationRequest locationRequest;
 
-    public final static long LOCATION_INTERVAL = 2000;
+    public final static long LOCATION_INTERVAL = 1000;
+
+
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            Location location = locationResult.getLastLocation();
+            if (location != null) {
+                aktuelleStrecke.aufgezeichneteWerte.get(nextCheckpoint - 1).add(new Sensorwert(System.nanoTime(), new double[]{location.getLatitude(), location.getLongitude(), 0.0f}));
+                sensorupdate.addSensorWert(sensorupdate.TYPE_GPS, new Sensorwert(System.nanoTime(), new double[]{location.getLatitude(), location.getLongitude(), 0.0f}));
+                recordedPositions.add(mMap.addCircle(new CircleOptions().center(new LatLng(location.getLatitude(), location.getLongitude())).radius(1.0)));
+                updateRecordetWerteCount();
+            }
+        }
+    };
+
+    private void updateRecordetWerteCount(){
+        tvPositioncount.setText(aktuelleStrecke.countAufgezeichneteWerte() + "");
+    }
 
 
     private CompoundButton.OnCheckedChangeListener bttnPauseContinueListener = (compoundButton, isChecked) -> {
         if (isChecked){
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
             increaseNextCheckpoint();
         } else {
-
+            try {
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+            } catch (SecurityException ex) {}
         }
     };
 
@@ -72,30 +103,28 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
         spinnerStrecke.setEnabled(!isChecked);
         bttnPauseContinue.setEnabled(isChecked);
         if (isChecked){
+            for (Circle c : recordedPositions)
+                c.remove();
+            recordedPositions.clear();
             llRecordData.setVisibility(View.VISIBLE);
-            gpssession = new Gpssession("testsession", System.nanoTime(), sensorupdate.TYPE_GPS);
+            //gpssession = new Gpssession("testsession", System.nanoTime(), sensorupdate.TYPE_GPS);
             try {
 
-                LocationRequest locationRequest = LocationRequest.create();
+                locationRequest = LocationRequest.create();
                 locationRequest.setInterval(LOCATION_INTERVAL);
-                locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+                locationRequest.setMaxWaitTime(LOCATION_INTERVAL);
+                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-                fusedLocationProviderClient.requestLocationUpdates(locationRequest, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-                        Location location = locationResult.getLastLocation();
-                        if (location != null)
-                            sensorupdate.addSensorWert(sensorupdate.TYPE_GPS, new Sensorwert(location.getTime(), new float[]{(float) location.getLatitude(), (float) location.getLongitude(), 0.0f}));
-                    }
-                }, null);
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
             } catch (SecurityException ex) {
 
             }
 
         } else {
-            gpssession.endzeit = System.nanoTime();
-            gpssession.sendSession();
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
+            aktuelleStrecke.saveStrecke("teststrecke11");
+            //gpssession.endzeit = System.nanoTime();
+            //gpssession.sendSession();
             sensorupdate.saveSensorwerte();
             llRecordData.setVisibility(View.GONE);
             bttnPauseContinue.setOnCheckedChangeListener(null);
@@ -130,32 +159,53 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
         tvNextcheckpoint = findViewById(R.id.tvNextcheckpoint);
         tvPositioncount = findViewById(R.id.tvPositioncount);
         spinnerStrecke = findViewById(R.id.spinnerStrecke);
+        spinnerSessions = findViewById(R.id.spinnerSessions);
         llRecordData = findViewById(R.id.llRecordData);
         llRecordData.setVisibility(View.GONE);
-        fusedLocationProviderClient = new FusedLocationProviderClient(this);
-
-        requestQueue = sensorupdate.requestQueue;
-        requestQueue.add(new JsonArrayRequest(Request.Method.GET, "http://blackilli.de/gpssession", null, response -> {
-            try {
-                for (int i = 0; i < response.length(); i++) {
-                    JSONObject jsonStrecke = response.getJSONObject(i);
-                    Strecke strecke = new Strecke(jsonStrecke.getInt("Id"), jsonStrecke.getString("Bezeichung"));
-                    for (int j = 0; j < jsonStrecke.getJSONArray("Wegpunkte").length(); j++) {
-                        JSONObject jsonWegpunkt = jsonStrecke.getJSONArray("Wegpunkte").getJSONObject(j);
-                        strecke.wegpunkte.add(new Wegpunkt(jsonWegpunkt.getDouble("Latitude"), jsonWegpunkt.getDouble("Longitude")));
+        bttnLoadSession = findViewById(R.id.bttnLoadSession);
+        bttnLoadSession.setOnClickListener(view -> {
+            for (Circle c : recordedPositions)
+                c.remove();
+            Session session = (Session) spinnerSessions.getSelectedItem();
+            requestQueue.add(new JsonObjectRequest(Request.Method.GET, "http://blackilli.de/sessions?id=" + session.sessionid, null, response -> {
+                try {
+                    JSONArray jsonTeilstrecken = response.getJSONArray("Teilstrecken");
+                    for (int i = 0; i < jsonTeilstrecken.length(); i++)
+                    {
+                        aktuelleStrecke.aufgezeichneteWerte.set(i, new LinkedList<>());
+                        JSONArray jsonPositionen = jsonTeilstrecken.getJSONObject(i).getJSONArray("Positionen");
+                        for (int j = 0; j < jsonPositionen.length(); j++){
+                            JSONObject position = jsonPositionen.getJSONObject(j);
+                            long timestamp = position.getLong("Timestamp");
+                            double[] values = new double[3];
+                            JSONArray jsonValues = position.getJSONArray("Values");
+                            for (int k = 0; k < jsonValues.length(); k++)
+                                values[k] = jsonValues.getDouble(k);
+                            aktuelleStrecke.aufgezeichneteWerte.get(i).add(new Sensorwert(timestamp, values));
+                            recordedPositions.add(mMap.addCircle(new CircleOptions().radius(1.0).center(new LatLng(values[0], values[1]))));
+                        }
                     }
-                    streckeArrayList.add(strecke);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                ArrayAdapter<Strecke> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, streckeArrayList);
-                spinnerStrecke.setAdapter(arrayAdapter);
-                Log.e("RESPONSE", response.toString());
-            } catch (JSONException ex) {
-                Log.e("MapActivityInit", "Fehler beim parsen des StreckenJSON", ex);
+            }, error -> {}));
+        });
+        bttnPauseContinue.setOnCheckedChangeListener(bttnPauseContinueListener);
+        fusedLocationProviderClient = new FusedLocationProviderClient(this);
+        sensorupdate = Sensorupdate.getInstance();
+        requestQueue = sensorupdate.requestQueue;
+        requestQueue.add(new JsonArrayRequest(Request.Method.GET, "http://blackilli.de/sessions", null, response -> {
+            for (int i = 0; i < response.length(); i++){
+                try {
+                    JSONObject jsonObject = response.getJSONObject(i);
+                    sessionArrayList.add(new Session(jsonObject.getInt("Sessionid"), jsonObject.getString("Bezeichnung")));
+                    spinnerSessions.setAdapter(new ArrayAdapter<Session>(this, android.R.layout.simple_spinner_dropdown_item, sessionArrayList));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-                , error -> Log.e("RESPONSE", error.toString())));
-
-
+        }, error -> {}));
     }
 
 
@@ -189,12 +239,34 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
                 streckenMarker.clear();
 
                 Strecke selectedStrecke = (Strecke) adapterView.getItemAtPosition(i);
+                aktuelleStrecke = selectedStrecke;
                 for (int j = 0; j < selectedStrecke.wegpunkte.size(); j++){
                     Wegpunkt wegpunkt = selectedStrecke.wegpunkte.get(j);
                     streckenMarker.add(mMap.addMarker(new MarkerOptions().title(j + "").position(wegpunkt.getLatLng())));
                 }
             }
         });
+
+        requestQueue = sensorupdate.requestQueue;
+        requestQueue.add(new JsonArrayRequest(Request.Method.GET, "http://blackilli.de/gpssession", null, response -> {
+            try {
+                for (int i = 0; i < response.length(); i++) {
+                    JSONObject jsonStrecke = response.getJSONObject(i);
+                    Strecke strecke = new Strecke(jsonStrecke.getInt("Id"), jsonStrecke.getString("Bezeichung"));
+                    for (int j = 0; j < jsonStrecke.getJSONArray("Wegpunkte").length(); j++) {
+                        JSONObject jsonWegpunkt = jsonStrecke.getJSONArray("Wegpunkte").getJSONObject(j);
+                        strecke.addWegpunkt(new Wegpunkt(jsonWegpunkt.getDouble("Latitude"), jsonWegpunkt.getDouble("Longitude")));
+                    }
+                    streckeArrayList.add(strecke);
+                }
+                ArrayAdapter<Strecke> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, streckeArrayList);
+                spinnerStrecke.setAdapter(arrayAdapter);
+                Log.e("RESPONSE", response.toString());
+            } catch (JSONException ex) {
+                Log.e("MapActivityInit", "Fehler beim parsen des StreckenJSON", ex);
+            }
+        }
+                , error -> Log.e("RESPONSE", error.toString())));
 
         // Add a marker in Sydney and move the camera
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

@@ -6,19 +6,28 @@ package com.example.alex.test;
 
 public class Sensorwert {
     private long timestamp;
-    private float[] values;
+    private double[] values;
+
+    public Sensorwert(long timestamp, double[] values) {
+        this.timestamp = timestamp;
+        this.values = values.clone();
+        if (values.length < 3) this.values = new double[]{values[0], 0.0, 0.0};
+    }
 
     public Sensorwert(long timestamp, float[] values) {
         this.timestamp = timestamp;
-        this.values = values.clone();
-        if (values.length < 3) this.values = new float[]{values[0], 0.0f, 0.0f};
+        this.values = new double[]{0.0, 0.0, 0.0};
+        try {
+            for (int i = 0; i < 3; i++)
+                this.values[i] = values[i];
+        } catch (IndexOutOfBoundsException ex) {}
     }
 
-    public float[] getValues() {
+    public double[] getValues() {
         return values;
     }
 
-    public void setValues(float[] values) {
+    public void setValues(double[] values) {
         this.values = values;
     }
 
