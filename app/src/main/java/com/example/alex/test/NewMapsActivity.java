@@ -2,9 +2,11 @@ package com.example.alex.test;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,6 +41,10 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,11 +52,13 @@ import org.json.JSONObject;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private FrameLayout mapFrame;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Marker aktuellePositionMarker;
     private RequestQueue requestQueue;
@@ -60,13 +69,14 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
     private LinkedList<Circle> recordedPositions = new LinkedList<>();
     private Sensorupdate sensorupdate;
     private TextView tvNextcheckpoint, tvPositioncount;
-    private ToggleButton bttnStartStop, bttnPauseContinue;
+    private ToggleButton bttnStartStop, bttnPauseContinue, bttnCDF;
     private Button bttnLoadSession;
     private LinearLayout llRecordData;
     private int nextCheckpoint = 1;
     private Gpssession gpssession;
     private Strecke aktuelleStrecke;
     private LocationRequest locationRequest;
+    private GraphView graphCDF;
 
     public final static long LOCATION_INTERVAL = 1000;
 
@@ -98,6 +108,16 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
             try {
                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
             } catch (SecurityException ex) {}
+        }
+    };
+
+    private CompoundButton.OnCheckedChangeListener bttnCDFListener = (compoundButton, isChecked) -> {
+        if (isChecked){
+            graphCDF.setVisibility(View.VISIBLE);
+            mapFrame.setVisibility(View.GONE);
+        } else {
+            graphCDF.setVisibility(View.GONE);
+            mapFrame.setVisibility(View.VISIBLE);
         }
     };
 
@@ -154,6 +174,10 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        graphCDF = findViewById(R.id.graphCDF);
+        mapFrame = findViewById(R.id.mapFrame);
+        bttnCDF = findViewById(R.id.bttnCDF);
+        bttnCDF.setOnCheckedChangeListener(bttnCDFListener);
         bttnStartStop = findViewById(R.id.bttnStartStop);
         bttnStartStop.setOnCheckedChangeListener(bttnStartStopListener);
         bttnPauseContinue = findViewById(R.id.bttnPauseContinue);
@@ -202,6 +226,7 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
                     }
                     if (center != null)
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
+
 
                     //TODO An dieser stelle kann mit aktuelleStrecke.aufgezeichneteWerteDif() die differenzen durchgegangen werden
                     //aktuelleStrecke.aufgezeichneteWerte               Liste der Streckenabschnitte
