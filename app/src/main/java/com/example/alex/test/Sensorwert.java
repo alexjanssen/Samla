@@ -1,5 +1,7 @@
 package com.example.alex.test;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Blackilli on 14.11.17.
  */
@@ -25,6 +27,10 @@ public class Sensorwert {
 
     public double[] getValues() {
         return values;
+    }
+
+    public LatLng getLatLng(){
+        return new LatLng(values[0], values[1]);
     }
 
     public void setValues(double[] values) {

@@ -2,6 +2,7 @@ package com.example.alex.test;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -185,6 +186,20 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
                             recordedPositions.add(mMap.addCircle(new CircleOptions().radius(1.0).center(new LatLng(values[0], values[1]))));
                         }
                     }
+                    for (LinkedList<Sensorwert> list : aktuelleStrecke.interpolierteWerte())
+                        for (Sensorwert sensorwert : list)
+                            recordedPositions.add(mMap.addCircle(new CircleOptions().radius(0.5).center(sensorwert.getLatLng()).fillColor(Color.BLUE)));
+
+                    //TODO An dieser stelle kann mit aktuelleStrecke.aufgezeichneteWerteDif() die differenzen durchgegangen werden
+                    //aktuelleStrecke.aufgezeichneteWerte               Liste der Streckenabschnitte
+                    //aktuelleStrecke.aufgezeichneteWerte.get(1)        Liste der Werte pro Streckenabschnitt
+                    //aktuelleStrecke.aufgezeichneteWerte.get(1).get(1) Einzelnes Sensorwertobjekt
+
+                    //aktuelleStrecke.interpolierteWerte()                  Hat die gleiche Struktur wie aktuelleStrecke.aufgezeichneteWerte
+                    //aktuelleStrecke.interpolierteWerte().get(1).get(1)    Interpolierter Sensorwert
+
+                    //aktuelleStrecke.aufgezeichneteWerteDif()                  Hat wieder die gleiche Struktur
+                    //aktuelleStrecke.aufgezeichneteWerteDif().get(1).get(1)    Abstand zwischen echtem und interpolierten Sensorwert
 
                 } catch (JSONException e) {
                     e.printStackTrace();
