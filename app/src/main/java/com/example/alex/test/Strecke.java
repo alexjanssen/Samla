@@ -1,6 +1,7 @@
 package com.example.alex.test;
 
 import android.location.Location;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,16 +40,25 @@ public class Strecke {
             tmp.add(new LinkedList<>());
             //eigentlich müsste man auf nummer sicher gehen und hier nach timestamp sorten. Das niedrige API level lässt dies aber leider nicht so einfach zu
             //aufgezeichneteWerte.get(i).sort((a, b) -> Long.compare(a.getTimestamp(), b.getTimestamp()));
+            if (aufgezeichneteWerte.get(i).size() == 0)
+                continue;
+            Log.e("Werte Interpolieren", "aufgezeichneteWerte.get(" + i + ").size(): " + aufgezeichneteWerte.get(i).size());
+
             start = aufgezeichneteWerte.get(i).getFirst();
             end = aufgezeichneteWerte.get(i).getLast();
-            double latdif = end.getValues()[0] - start.getValues()[0];
-            double londif = end.getValues()[1] - start.getValues()[1];
+            double latdif = wegpunkte.get(i+1).Latitude - wegpunkte.get(i).Latitude;
+            Log.e("Interpolieren", "Latdif: " + latdif);
+            double londif = wegpunkte.get(i+1).Longitude - wegpunkte.get(i).Longitude;
+            Log.e("Interpolieren", "Londif: " + londif);
             long timedif = end.getTimestamp() - start.getTimestamp();
+            Log.e("Interpolieren", "Timedif: " + timedif);
             for (int j = 0; j < aufgezeichneteWerte.get(i).size(); j++)
             {
+                Log.e("Interpolieren", "Timestamp von aufgezeichneteWerte.get(" + i + ").get(" + j + "): " + aufgezeichneteWerte.get(i).get(j).getTimestamp());
                 long timestamp = aufgezeichneteWerte.get(i).get(j).getTimestamp();
-                double mp = 1 / timedif * (timestamp - start.getTimestamp());
-                double[] values = new double[]{start.getValues()[0] + latdif * mp, start.getValues()[1] + londif * mp, 0.0};
+                double mp = 1 / (double)timedif * ((double)timestamp - (double)start.getTimestamp());
+                Log.e("Interpolieren", "MP: " + mp);
+                double[] values = new double[]{wegpunkte.get(i).Latitude + latdif * mp, wegpunkte.get(i).Longitude + londif * mp, 0.0};
                 tmp.get(i).add(new Sensorwert(timestamp, values));
             }
         }

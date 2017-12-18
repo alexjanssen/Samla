@@ -169,7 +169,7 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
             for (Circle c : recordedPositions)
                 c.remove();
             Session session = (Session) spinnerSessions.getSelectedItem();
-            requestQueue.add(new JsonObjectRequest(Request.Method.GET, "http://blackilli.de/sessions?id=" + session.sessionid, null, response -> {
+            requestQueue.add(new JsonObjectRequest(Request.Method.GET, "http://blackilli.de/session?id=" + session.sessionid, null, response -> {
                 try {
                     JSONArray jsonTeilstrecken = response.getJSONArray("Teilstrecken");
                     for (int i = 0; i < jsonTeilstrecken.length(); i++)
@@ -189,11 +189,17 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
                     }
 
                     LatLng center = null;
-                    for (LinkedList<Sensorwert> list : aktuelleStrecke.interpolierteWerte())
-                        for (Sensorwert sensorwert : list) {
-                            center = sensorwert.getLatLng();
-                            recordedPositions.add(mMap.addCircle(new CircleOptions().radius(0.5).center(center).fillColor(Color.BLUE)));
+                    LinkedList<LinkedList<Sensorwert>> interpolierteWerte = aktuelleStrecke.interpolierteWerte();
+                    for (int i = 0; i < interpolierteWerte.size(); i++){
+                        for (int j = 0; j < interpolierteWerte.get(i).size(); j++)
+                        {
+                            center = interpolierteWerte.get(i).get(j).getLatLng();
+                            //recordedPositions.add(mMap.addCircle(new CircleOptions().radius(1.0).center(center)));
+                            recordedPositions.add(mMap.addCircle(new CircleOptions().radius(1.0).center(center).strokeColor(Color.BLUE)));
+                            Log.d("Markiere InterpolWerte", "Aufgenommener Sensorwert: Lat: " + interpolierteWerte.get(i).get(j).getValues()[0] + "     Lon: " + interpolierteWerte.get(i).get(j).getValues()[1]);
+                            Log.d("Markiere InterpolWerte", "Center: Lat: " + center.latitude + "     Lon: " + center.longitude);
                         }
+                    }
                     if (center != null)
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
 
@@ -217,7 +223,7 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
         fusedLocationProviderClient = new FusedLocationProviderClient(this);
         sensorupdate = Sensorupdate.getInstance();
         requestQueue = sensorupdate.requestQueue;
-        requestQueue.add(new JsonArrayRequest(Request.Method.GET, "http://blackilli.de/sessions", null, response -> {
+        requestQueue.add(new JsonArrayRequest(Request.Method.GET, "http://blackilli.de/session", null, response -> {
             for (int i = 0; i < response.length(); i++){
                 try {
                     JSONObject jsonObject = response.getJSONObject(i);
@@ -304,11 +310,13 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
 
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(task -> {
             Location aktuellePosition = task.getResult();
-            if (aktuellePositionMarker == null)
-                aktuellePositionMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(aktuellePosition.getLatitude(), aktuellePosition.getLongitude())).title("Aktuelle Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-            aktuellePositionMarker.setPosition(new LatLng(aktuellePosition.getLatitude(), aktuellePosition.getLongitude()));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(aktuellePosition.getLatitude(), aktuellePosition.getLongitude())));
-            mMap.setMinZoomPreference(17.0f);
+            if(aktuellePosition != null) {
+                if (aktuellePositionMarker == null)
+                    aktuellePositionMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(aktuellePosition.getLatitude(), aktuellePosition.getLongitude())).title("Aktuelle Position").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                aktuellePositionMarker.setPosition(new LatLng(aktuellePosition.getLatitude(), aktuellePosition.getLongitude()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(aktuellePosition.getLatitude(), aktuellePosition.getLongitude())));
+                mMap.setMinZoomPreference(17.0f);
+            }
         });
     }
 }
