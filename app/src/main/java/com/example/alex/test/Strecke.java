@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 /**
@@ -92,9 +93,11 @@ public class Strecke {
             for (int j = 0; j < aufgezeichneteWerteDif.get(i).size(); j++)
                 tmp.add(aufgezeichneteWerteDif.get(i).get(j));
 
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             tmp.sort((a, b) -> Float.compare(a,b));
-        }
+        }  else Collections.sort(tmp);
 
         return tmp;
     }
