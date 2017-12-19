@@ -1,6 +1,7 @@
 package com.example.alex.test;
 
 import android.location.Location;
+import android.os.Build;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -78,9 +79,23 @@ public class Strecke {
                 endlat = aufgezeichneteWerte.get(i).get(j).getValues()[0];
                 endlon = aufgezeichneteWerte.get(i).get(j).getValues()[1];
                 Location.distanceBetween(startlat, startlon, endlat, endlon, results);
-                tmp.get(i).set(j, results[0]);
+                tmp.get(i).add(results[0]);
             }
         }
+        return tmp;
+    }
+
+    public LinkedList<Float> getAllDiffs(){
+        LinkedList<Float> tmp = new LinkedList<Float>();
+        LinkedList<LinkedList<Float>> aufgezeichneteWerteDif = aufgezeichneteWerteDif();
+        for (int i = 0; i < aufgezeichneteWerteDif.size(); i++)
+            for (int j = 0; j < aufgezeichneteWerteDif.get(i).size(); j++)
+                tmp.add(aufgezeichneteWerteDif.get(i).get(j));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tmp.sort((a, b) -> Float.compare(a,b));
+        }
+
         return tmp;
     }
 

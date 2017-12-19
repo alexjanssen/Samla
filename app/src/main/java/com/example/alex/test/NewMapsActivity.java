@@ -42,8 +42,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import org.json.JSONArray;
@@ -227,6 +229,23 @@ public class NewMapsActivity extends FragmentActivity implements OnMapReadyCallb
                     if (center != null)
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(center));
 
+                    PointsGraphSeries<DataPoint> pointPointsGraphSeries = new PointsGraphSeries<>();
+                    //LineGraphSeries<DataPoint> pointPointsGraphSeries = new LineGraphSeries<>();
+                    LinkedList<Float> diffs = aktuelleStrecke.getAllDiffs();
+                    for (int i =  0; i < diffs.size(); i++){
+                        if (i + 1 != diffs.size())
+                            if (diffs.get(i).equals(diffs.get(i+1)))
+                                continue;
+                        pointPointsGraphSeries.appendData(new DataPoint(diffs.get(i), (double) 100 / (double) diffs.size() * (double) (i + 1)), false, diffs.size());
+                        Log.e("GraphView", "x: " + diffs.get(i) + "    y: " + ((double) 100 / (double) diffs.size() * (double) (i + 1)));
+                    }
+                    pointPointsGraphSeries.setSize(5.0f);
+                    graphCDF.getViewport().setMaxX(diffs.getLast());
+                    graphCDF.getViewport().setMaxY(100.0);
+                    graphCDF.getViewport().setXAxisBoundsManual(true);
+                    graphCDF.getViewport().setYAxisBoundsManual(true);
+                    graphCDF.getSeries().clear();
+                    graphCDF.addSeries(pointPointsGraphSeries);
 
                     //TODO An dieser stelle kann mit aktuelleStrecke.aufgezeichneteWerteDif() die differenzen durchgegangen werden
                     //aktuelleStrecke.aufgezeichneteWerte               Liste der Streckenabschnitte
