@@ -52,7 +52,8 @@ public class PositionProvider extends IntentService {
     private static SensorManager sensorManager;
     private static HandlerThread handlerThread;
     private static Notification notification;
-    private static String locationProvider = LocationManager.NETWORK_PROVIDER;//LocationManager.GPS_PROVIDER;
+    //private static String locationProvider = LocationManager.NETWORK_PROVIDER;
+    private static String locationProvider = LocationManager.GPS_PROVIDER;
 
     public enum Strategie {
         Periodisch,
@@ -83,6 +84,7 @@ public class PositionProvider extends IntentService {
             accWerte[p] = Math.abs(event.values[0]) + Math.abs(event.values[1]) + Math.abs(event.values[2]);
             accWerte[3] = (accWerte[0] + accWerte[1] + accWerte[2]) / 3;
             p = (p+1)%3;
+            Log.d("Test", "AccWerte: " + accWerte[3]);
         }
 
         @Override
@@ -105,6 +107,7 @@ public class PositionProvider extends IntentService {
         //Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 
         if (stillstandserkennung && !oldStillstand)
+        //if (stillstandserkennung)
             sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
         else if (!stillstandserkennung)
             sensorManager.unregisterListener(sensorEventListener);
@@ -179,12 +182,11 @@ public class PositionProvider extends IntentService {
     LocationListener distanceListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            Log.e("PositionProvider", "Location erhalten. Geschwindigkeit: " + location.getSpeed());
-            Toast.makeText(getApplicationContext(), "Location erhalten. Geschwindigkeit: " + location.getSpeed(), Toast.LENGTH_LONG).show();
             logger.locationReceived(location);
             if (logger.getLastSendLocation() == null || logger.getLastSendLocation().distanceTo(location) > abstandMeter)
                 restClient.sendUpdate(location);
             showNotification();
+            Log.d("PositionProvider", "Location erhalten: " + location.toString() + "\n" + location.getSpeed());
         }
 
         @Override
@@ -223,6 +225,8 @@ public class PositionProvider extends IntentService {
                             speed = location.getSpeed();
                         else
                             speed = lastLastLocation.distanceTo(location) / (((float)location.getTime() - (float)lastLastLocation.getTime()) / 1000.0f);
+                    Log.e("PositionProvider", "Location erhalten. Geschwindigkeit: " + location.getSpeed());
+                    //Toast.makeText(getApplicationContext(), "Location erhalten. Geschwindigkeit: " + location.getSpeed(), Toast.LENGTH_LONG).show();
                     mySleep((long)((abstandMeter - lastLocation.distanceTo(location)) / speed) * 1000L);
 
                     locationManager.requestSingleUpdate(locationProvider, speedListener, handlerThread.getLooper());
@@ -268,13 +272,19 @@ public class PositionProvider extends IntentService {
                     locationManager.removeUpdates(periodicListener);
                 } else if (strategie.equals(Strategie.Distanzbasiert) && !geschwindigkeitsbasiert){
                     Log.e("PositionProvider", "Starte Distanzbasiert");
-                    locationManager.requestLocationUpdates(locationProvider,0,0, distanceListener);
-                    while (strategie.equals(Strategie.Distanzbasiert) && running) Thread.sleep((long)(100));
+                    while (strategie.equals(Strategie.Distanzbasiert) && running)
+                    {
+                        locationManager.requestSingleUpdate(locationProvider, distanceListener, handlerThread.getLooper());
+                        mySleep(1000);
+                    }
                     locationManager.removeUpdates(distanceListener);
                 } else if (strategie.equals(Strategie.Distanzbasiert) && geschwindigkeitsbasiert){
                     Log.e("PositionProvider", "Starte Geschwindigkeitsbasiert");
-                    locationManager.requestSingleUpdate(locationProvider, speedListener, handlerThread.getLooper());
-                    while (strategie.equals(Strategie.Distanzbasiert) && geschwindigkeitsbasiert && running) Thread.sleep((long)(100));
+                    while (strategie.equals(Strategie.Distanzbasiert) && geschwindigkeitsbasiert && running)
+                    {
+                        locationManager.requestSingleUpdate(locationProvider, speedListener, handlerThread.getLooper());
+                        Thread.sleep((long)(1000));
+                    }
                     locationManager.removeUpdates(speedListener);
                 }
             }
