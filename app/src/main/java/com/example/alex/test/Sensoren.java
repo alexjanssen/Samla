@@ -111,7 +111,7 @@ public class Sensoren implements SensorEventListener {
         sensorupdate = Sensorupdate.getInstance();
         sensorManager = (SensorManager) mContext.getSystemService(SENSOR_SERVICE);
         mLicht = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
 
         //#############################################################################
         //#############################################################################

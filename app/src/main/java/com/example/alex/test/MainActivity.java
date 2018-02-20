@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         bttnAcc.setOnClickListener(v -> {
-                    sensorGrafikAufrufen(Sensor.TYPE_ACCELEROMETER);
+                    sensorGrafikAufrufen(Sensor.TYPE_LINEAR_ACCELERATION);
                     //sensorGrafikAufrufen("Acc");
                 }
         );
