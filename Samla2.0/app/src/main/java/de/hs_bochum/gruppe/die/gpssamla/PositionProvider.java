@@ -207,6 +207,7 @@ public class PositionProvider extends IntentService {
     LocationListener speedListener = new LocationListener() {
         @SuppressLint("MissingPermission")
         @Override
+
         public void onLocationChanged(Location location) {
             logger.locationReceived(location);
             Location lastLocation = logger.getLastSendLocation();
@@ -235,7 +236,29 @@ public class PositionProvider extends IntentService {
                 }
             }
         }
+        /*
+        public void onLocationChanged(Location location) {
+            logger.locationReceived(location);
+            Location lastLocation = logger.getLastSendLocation();
+            Location lastLastLocation = logger.getLastSendLocation();
+            if (lastLocation == null || lastLocation.distanceTo(location) > abstandMeter){
+                restClient.sendUpdate(location);
+                lastLocation = location;
+            }
+            showNotification();
+            if (geschwindigkeitsbasiert && running) {
+                try {
+                    float speed = geschwindigkeit;
 
+                    mySleep((long)((abstandMeter - lastLocation.distanceTo(location)) / speed) * 1000L);
+
+                    locationManager.requestSingleUpdate(locationProvider, speedListener, handlerThread.getLooper());
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        */
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
 
