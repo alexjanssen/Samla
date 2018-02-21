@@ -67,8 +67,9 @@ public class PositionProvider extends IntentService {
     private double abstandSekunden, abstandMeter;
     private float geschwindigkeit;
     private float[] accWerte;
-    private float stillstandThreshold = 0.8f;
+    private float stillstandThreshold = 1.0f;
     public static boolean running;
+    private static boolean accRunning = false;
 
     private Logger logger;
     private RESTClient restClient;
@@ -106,12 +107,14 @@ public class PositionProvider extends IntentService {
         this.geschwindigkeit = extras.getFloat("geschwindigkeit", 0.0f);
         //Toast.makeText(this, "service starting", Toast.LENGTH_SHORT).show();
 
-        if (stillstandserkennung && !oldStillstand)
-        //if (stillstandserkennung)
+        if (stillstandserkennung && !accRunning) {
             sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION), SensorManager.SENSOR_DELAY_NORMAL);
-        else if (!stillstandserkennung)
+            accRunning = true;
+        }
+        else if (!stillstandserkennung) {
             sensorManager.unregisterListener(sensorEventListener);
-
+            accRunning = false;
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -306,7 +309,7 @@ public class PositionProvider extends IntentService {
                     while (strategie.equals(Strategie.Distanzbasiert) && geschwindigkeitsbasiert && running)
                     {
                         locationManager.requestSingleUpdate(locationProvider, speedListener, handlerThread.getLooper());
-                        Thread.sleep((long)(1000));
+                        mySleep(1000);
                     }
                     locationManager.removeUpdates(speedListener);
                 }
@@ -326,6 +329,7 @@ public class PositionProvider extends IntentService {
                 Thread.sleep(100);
                 if (accWerte[3] > stillstandThreshold) {
                     l += 100;
+                    Log.d("Stillstandserkennung", "Bewegung erkannt: acc: " + accWerte[3] + "   threshold: " + stillstandThreshold);
                 }
             }
         } else Thread.sleep(millis);
@@ -356,6 +360,8 @@ public class PositionProvider extends IntentService {
         handlerThread.quitSafely();
         logger = null;
         restClient = null;
+        if (accRunning) sensorManager.unregisterListener(sensorEventListener);
+        accRunning = false;
         super.onDestroy();
     }
 }
